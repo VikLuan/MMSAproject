@@ -1,0 +1,2 @@
+# MMSAproject
+Action Recognition application
