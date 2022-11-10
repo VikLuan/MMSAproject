@@ -15,31 +15,23 @@ import dataset
 
 logging.set_verbosity(logging.ERROR)
 
-# Some modules to help with reading the UCF101 dataset.
-
 import numpy as np
 
-#Step 5: Fetch a random video
+def predict(loaded_video):
+    model_input = tf.constant(loaded_video, dtype=tf.float32)[tf.newaxis, ...]
+    model = i3d(model_input)['default'][0]
+    probabilities = tf.nn.softmax(model)
+    print("Top 5 actions:")
+    for i in np.argsort(probabilities)[::-1][:5]:
+      print(f"  {labels[i]:22}: {probabilities[i] * 100:5.2f}%")
 
-video_path = handlingData.fetch_ucf_video("v_LongJump_g01_c01.avi")
-sample_video = handlingData.load_video(video_path)
-sample_video1 = handlingData.load_video(video_path)[:100]
-sample_video.shape
-
-#Step 6: Predict from the video
-
-i3d = hub.load("https://tfhub.dev/deepmind/i3d-kinetics-400/1").signatures['default']
-
-def predict(sample_video):
-  # Add a batch axis to the to the sample video.
-  model_input = tf.constant(sample_video, dtype=tf.float32)[tf.newaxis, ...]
-
-  logits = i3d(model_input)['default'][0]
-  probabilities = tf.nn.softmax(logits)
-  labels = dataset.getLabels()
-
-  print("Top 5 actions:")
-  for i in np.argsort(probabilities)[::-1][:5]:
-    print(f"  {labels[i]:22}: {probabilities[i] * 100:5.2f}%")
-
-predict(sample_video)
+if __name__ == "__main__":
+    video_path = handlingData.fetch_video("v_LongJump_g01_c01.avi")
+    video = handlingData.load_video(video_path)
+    video1 = handlingData.load_video(video_path)[:100]
+    video.shape
+    ucf_videos = handlingData.list_videos()
+    dataset.set_categories()
+    i3d = hub.load("https://tfhub.dev/deepmind/i3d-kinetics-400/1").signatures['default']
+    labels = dataset.load_kinetics_labels()
+    predict(video)
