@@ -5,33 +5,45 @@
 # !pip install --upgrade tensorflow-hub
 # !pip install ipython
 
-# TensorFlow and TF-Hub modules.
 from absl import logging
 
 import tensorflow as tf
 import tensorflow_hub as hub
 import handlingData
 import dataset
-
+import numpy as np
+import random
 logging.set_verbosity(logging.ERROR)
 
-import numpy as np
 
 def predict(loaded_video):
     model_input = tf.constant(loaded_video, dtype=tf.float32)[tf.newaxis, ...]
     model = i3d(model_input)['default'][0]
     probabilities = tf.nn.softmax(model)
-    print("Top 5 actions:")
-    for i in np.argsort(probabilities)[::-1][:5]:
+    print("Top 3 actions:")
+    for i in np.argsort(probabilities)[::-1][:3]:
       print(f"  {labels[i]:22}: {probabilities[i] * 100:5.2f}%")
 
+
 if __name__ == "__main__":
-    video_path = handlingData.fetch_video("v_LongJump_g01_c01.avi")
-    video = handlingData.load_video(video_path)
-    video1 = handlingData.load_video(video_path)[:100]
-    video.shape
     ucf_videos = handlingData.list_videos()
-    dataset.set_categories()
+    dataset.set_categories(ucf_videos)
     i3d = hub.load("https://tfhub.dev/deepmind/i3d-kinetics-400/1").signatures['default']
     labels = dataset.load_kinetics_labels()
-    predict(video)
+    j = 3
+    while j != 0:
+        while True:
+            print("-------------------------------------------------------")
+            print("(1)Import random video, (2)Open webcam or (0)To exit")
+            j = int(input())
+            if j == 1:
+                video_path = handlingData.fetch_video(random.choice(handlingData.random_list))
+                video = handlingData.load_video(video_path)
+                break
+            elif j == 2:
+                video = handlingData.load_video(0, 400)
+                break
+            elif j == 0:
+                break
+            video.shape
+            predict(video)
