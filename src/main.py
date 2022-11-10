@@ -5,17 +5,21 @@
 # !pip install --upgrade tensorflow-hub
 # !pip install ipython
 
+# no display tf warnings
 from absl import logging
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+logging.set_verbosity(logging.ERROR)
+# no display tf warnings
 import tensorflow as tf
 import tensorflow_hub as hub
-import handlingData
-import dataset
 import numpy as np
 import random
-
-logging.set_verbosity(logging.ERROR)
+# chart libraries
+import plotly.express as px
+# local modules
+import handlingData
+import dataset
 
 
 def predict(loaded_video):
@@ -25,6 +29,10 @@ def predict(loaded_video):
     print("Top 3 actions:")
     for i in np.argsort(probabilities)[::-1][:3]:
         print(f"  {labels[i]:22}: {probabilities[i] * 100:5.2f}%")
+
+    # Creating Line Chart
+    fig = px.line(x=probabilities, y=labels, title="Results")
+    fig.show()
 
 
 if __name__ == "__main__":
