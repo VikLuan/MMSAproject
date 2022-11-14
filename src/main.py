@@ -10,7 +10,7 @@ from absl import logging
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 logging.set_verbosity(logging.ERROR)
-# no display tf warnings
+# core libraries
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np

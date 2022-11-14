@@ -14,8 +14,9 @@ UCF_ROOT = "https://www.crcv.ucf.edu/THUMOS14/UCF101/UCF101/"
 _VIDEO_LIST = None
 _CACHE_DIR = tempfile.mkdtemp()
 unverified_context = ssl._create_unverified_context()
-random_list = ["v_BrushingTeeth_g01_c01.avi", "v_SalsaSpin_g01_c01.avi", "v_JumpingJack_g01_c01.avi",
+random_list = ["v_BrushingTeeth_g01_c01.avi", "v_SalsaSpin_g01_c01.avi", "v_BabyCrawling_g01_c01.avi",
                "v_PlayingCello_g01_c01.avi", "v_LongJump_g01_c01.avi"]
+
 
 def list_videos():
     global _VIDEO_LIST

@@ -1,11 +1,14 @@
 from urllib import request  # requires python3
 
 KINETICS_URL = "https://raw.githubusercontent.com/deepmind/kinetics-i3d/master/data/label_map.txt"
+
+
 def load_kinetics_labels():
     with request.urlopen(KINETICS_URL) as obj:
         labels = [line.decode("utf-8").strip() for line in obj.readlines()]
     print("Found in total %d labels." % len(labels))
     return labels
+
 
 def set_categories(ucf_videos):
     categories = {}
